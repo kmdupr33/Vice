@@ -1,43 +1,30 @@
 package com.philhacker.vice;
 
-import com.google.testing.compile.JavaFileObjects;
+import com.philhacker.vice.annotations.Vice;
 import org.junit.Test;
 
-import javax.tools.JavaFileObject;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import static com.google.common.truth.Truth.assertAbout;
-import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by mattdupree on 6/21/16.
  */
 public class ViceTests {
     @Test
-    public void simpleTest() {
+    public void simpleTest() throws URISyntaxException, IOException {
 
-        final String source =
-                "import com.philhacker.vice.annotations.Clamp;\n" +
-                "import com.philhacker.vice.annotations.ViceFor;\n" +
-                "public class Reverser {\n" +
-                "    public String reverse(String string) {\n" +
-                "        return new StringBuilder(string).reverse().toString();\n" +
-                "    }\n" +
-                "\n" +
-                "    @ViceFor(Reverser.class)\n" +
-                "    public static class ViceMaker {\n" +
-                "\n" +
-                "        @ViceFor(Reverser.class)\n" +
-                "        @Clamp(\"reverse\")\n" +
-                "        public void clampReverse() {\n" +
-                "            Reverser reverser = new Reverser();\n" +
-                "            reverser.reverse(\"hello\");\n" +
-                "        }\n" +
-                "    }\n" +
-                "}";
-        final JavaFileObject sourceFile = JavaFileObjects.forSourceString("Reverser", source);
-        assertAbout(javaSource())
-                .that(sourceFile)
-                .processedWith(new ViceProcessor())
-                .compilesWithoutError();
+        final Vice vice = new Vice();
+        final String pathToGeneratedCharacterizationTest = "/Users/mattdupree/Developer/Vice/src/test/java/com/philhacker/vice/ReverserCharacterizations.java";
+        vice.make(pathToGeneratedCharacterizationTest, ViceMaker.class);
+        final String generatedFile = new String(Files.readAllBytes(Paths.get(pathToGeneratedCharacterizationTest)));
+        final Path expectedFilePath = Paths.get(this.getClass().getClassLoader().getResource("SimpleTestGen.java").toURI());
+        final String expectedFile = new String(Files.readAllBytes(expectedFilePath));
+
+        assertEquals(expectedFile, generatedFile);
     }
 }
