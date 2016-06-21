@@ -19,9 +19,11 @@ public class ViceTests {
     public void simpleTest() throws URISyntaxException, IOException {
 
         final Vice vice = new Vice();
-        final String pathToGeneratedCharacterizationTest = "/Users/mattdupree/Developer/Vice/src/test/java/com/philhacker/vice/ReverserCharacterizations.java";
+        final String pathToGeneratedCharacterizationTest
+                = "/Users/mattdupree/Developer/Vice/src/test/java/com/philhacker/vice/ReverserCharacterizations.java";
         vice.make(pathToGeneratedCharacterizationTest, ViceMaker.class);
         final String generatedFile = new String(Files.readAllBytes(Paths.get(pathToGeneratedCharacterizationTest)));
+        //noinspection ConstantConditions
         final Path expectedFilePath = Paths.get(this.getClass().getClassLoader().getResource("SimpleTestGen.java").toURI());
         final String expectedFile = new String(Files.readAllBytes(expectedFilePath));
 
