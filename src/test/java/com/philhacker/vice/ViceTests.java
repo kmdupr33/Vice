@@ -21,8 +21,9 @@ public class ViceTests {
         final Vice vice = new Vice();
         final String pathToGeneratedCharacterizationTest
                 = "/Users/mattdupree/Developer/Vice/src/test/java/com/philhacker/vice/ReverserCharacterizations.java";
-        vice.make(pathToGeneratedCharacterizationTest, ViceMaker.class);
-        final String generatedFile = new String(Files.readAllBytes(Paths.get(pathToGeneratedCharacterizationTest)));
+        final Path path = Paths.get(pathToGeneratedCharacterizationTest);
+        vice.make(path.subpath(0, path.getNameCount() - 1).toFile().getPath(), ViceMaker.class);
+        final String generatedFile = new String(Files.readAllBytes(path));
         //noinspection ConstantConditions
         final Path expectedFilePath = Paths.get(this.getClass().getClassLoader().getResource("SimpleTestGen.java").toURI());
         final String expectedFile = new String(Files.readAllBytes(expectedFilePath));
