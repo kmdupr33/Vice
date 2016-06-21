@@ -10,8 +10,7 @@ import com.philhacker.vice.annotations.ViceFor;
 public class ViceMaker {
 
     @Clamp("reverse")
-    public void clampReverse() {
-        Reverser reverser = new Reverser();
-        reverser.reverse("hello");
+    public String clampReverse(Reverser reverser) {
+        return reverser.reverse("hello");
     }
 }
