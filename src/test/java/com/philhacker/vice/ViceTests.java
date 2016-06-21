@@ -39,6 +39,5 @@ public class ViceTests {
                 .that(sourceFile)
                 .processedWith(new ViceProcessor())
                 .compilesWithoutError();
-
     }
 }
