@@ -11,5 +11,6 @@ repositories {
 
 dependencies {
     compile 'com.squareup:javapoet:1.7.0'
+    compile 'net.bytebuddy:byte-buddy:1.4.3'
     compile group: 'junit', name: 'junit', version: '4.11'
 }

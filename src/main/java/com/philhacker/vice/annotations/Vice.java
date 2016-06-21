@@ -30,12 +30,14 @@ public class Vice {
                 final Object clampedObject = classToInstantiate.newInstance();
                 for (Method method : methodsToExecute) {
                     final Object returnValue = method.invoke(viceMaker, clampedObject);
-                    final String format = String.format("$T %s = new $T()", classToInstantiate.getSimpleName().toLowerCase());
+                    final String objectVariableName = classToInstantiate.getSimpleName().toLowerCase();
+                    final String format = String.format("$T %s = new $T()", objectVariableName);
                     MethodSpec characterizeReverse = MethodSpec.methodBuilder("characterizeReverse")
                             .addModifiers(Modifier.PUBLIC)
                             .returns(void.class)
                             .addAnnotation(Test.class)
                             .addStatement(format, classToInstantiate, classToInstantiate)
+                            .addStatement("$L", objectVariableName)
                             .build();
                     final String className = classToInstantiate.getSimpleName() + "Characterization";
                     TypeSpec characterizationClass = TypeSpec.classBuilder(className)
