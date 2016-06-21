@@ -4,9 +4,6 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 
-/**
- * Created by mattdupree on 6/21/16.
- */
 public class ReverserCharacterization {
     @Test
     public void characterizeReverse() {
