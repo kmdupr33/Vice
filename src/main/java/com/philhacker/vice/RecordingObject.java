@@ -44,6 +44,9 @@ class RecordingObject {
             }
             clampedClassTypeDef = getReceiverTypeDefinition(clampedClassTypeDef, method, invocations);
         }
+        if (clampedClassTypeDef == null) {
+            throw new IllegalArgumentException("Class to clamp has no declared methods");
+        }
         final Object rawObject = clampedClassTypeDef
                 .make()
                 .load(classToClamp.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent())
