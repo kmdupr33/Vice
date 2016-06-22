@@ -1,6 +1,8 @@
 package com.philhacker.vice;
 
 /**
+ * Simple utility class for wrapping three values
+ *
  * Created by mattdupree on 6/22/16.
  */
 class Triple<T, U, V> {
