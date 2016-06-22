@@ -1,5 +1,6 @@
-package com.philhacker.vice;
+package com.philhacker.vice.recordingobjects;
 
+import com.philhacker.vice.Triple;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
@@ -22,7 +23,7 @@ import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
  *
  * Created by mattdupree on 6/22/16.
  */
-class ByteBuddyRecordingObjectFactory implements RecordingObjectFactory {
+public class ByteBuddyRecordingObjectFactory implements RecordingObjectFactory {
 
     public ListRecordingObject make(Class classToClamp) throws InstantiationException, IllegalAccessException {
         final ByteBuddy byteBuddy = new ByteBuddy();

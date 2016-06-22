@@ -1,5 +1,6 @@
 package com.philhacker.vice;
 
+import com.philhacker.vice.recordingobjects.ByteBuddyRecordingObjectFactory;
 import org.junit.Test;
 
 import java.io.IOException;

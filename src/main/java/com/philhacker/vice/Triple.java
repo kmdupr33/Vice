@@ -5,12 +5,12 @@ package com.philhacker.vice;
  *
  * Created by mattdupree on 6/22/16.
  */
-class Triple<T, U, V> {
+public class Triple<T, U, V> {
     private final T t;
     private final U u;
     private final V v;
 
-    Triple(T t, U u, V v) {
+    public Triple(T t, U u, V v) {
         this.t = t;
         this.u = u;
         this.v = v;
