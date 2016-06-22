@@ -1,6 +1,5 @@
 package com.philhacker.vice;
 
-import com.philhacker.vice.annotations.Vice;
 import org.junit.Test;
 
 import java.io.IOException;

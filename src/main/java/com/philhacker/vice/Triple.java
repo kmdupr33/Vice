@@ -1,4 +1,4 @@
-package com.philhacker.vice.annotations;
+package com.philhacker.vice;
 
 /**
  * Created by mattdupree on 6/22/16.
