@@ -18,6 +18,8 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 /**
+ * An object that records its method invocations.
+ *
  * Created by mattdupree on 6/22/16.
  */
 class RecordingObject {
@@ -50,11 +52,11 @@ class RecordingObject {
         return new RecordingObject(rawObject, invocations);
     }
 
-    public Object getRawObject() {
+    Object getRawObject() {
         return rawObject;
     }
 
-    public List<Triple<Method, List<Object>, Object>> getArgs() {
+    List<Triple<Method, List<Object>, Object>> getArgs() {
         return args;
     }
 
