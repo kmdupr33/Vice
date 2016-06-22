@@ -13,14 +13,15 @@ import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.implementation.bind.annotation.SuperCall;
 import org.junit.Test;
-import org.junit.runners.JUnit4;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,6 +30,8 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 /**
+ * Generates regression tests.
+ *
  * Created by mattdupree on 6/21/16.
  */
 public class Vice {
@@ -77,32 +80,32 @@ public class Vice {
         }
     }
 
-    static class Triple<T, U, V> {
+    private static class Triple<T, U, V> {
         private final T t;
         private final U u;
         private final V v;
 
-        public Triple(T t, U u, V v) {
+        Triple(T t, U u, V v) {
             this.t = t;
             this.u = u;
             this.v = v;
         }
 
-        public V getV() {
+        V getV() {
             return v;
         }
 
-        public U getU() {
+        U getU() {
             return u;
         }
 
-        public T getT() {
+        T getT() {
             return t;
         }
     }
 
 
-    static class RecordingObject {
+    private static class RecordingObject {
         private final Object rawObject;
         private final List<Triple<Method, List<Object>, Object>> args;
 
@@ -139,11 +142,11 @@ public class Vice {
                 .intercept(MethodDelegation.to(new MethodDelegate(method, methodToInvocations)));
     }
 
-    public static class MethodDelegate {
+    private static class MethodDelegate {
         private final Method method;
         private final List<Triple<Method, List<Object>, Object>> invocations;
 
-        public MethodDelegate(Method method, List<Triple<Method, List<Object>, Object>> invocations) {
+        MethodDelegate(Method method, List<Triple<Method, List<Object>, Object>> invocations) {
             this.method = method;
             this.invocations = invocations;
         }
