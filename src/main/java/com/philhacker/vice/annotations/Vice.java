@@ -15,7 +15,6 @@ import org.junit.Test;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
-import static net.bytebuddy.matcher.ElementMatchers.returns;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 /**
