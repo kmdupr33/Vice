@@ -2,14 +2,10 @@ package com.philhacker.vice;
 
 import com.philhacker.vice.annotations.Clamp;
 import com.philhacker.vice.annotations.ViceFor;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import junit.framework.TestCase;
 import net.bytebuddy.agent.ByteBuddyAgent;
-import org.junit.Test;
 
-import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,6 +21,15 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("WeakerAccess")
 public class Vice {
+
+    private final RegressionTestWriter regressionTestWriter;
+    private final RecordingObjectFactory recordingObjectFactory;
+
+    public Vice(RegressionTestWriter regressionTestWriter, RecordingObjectFactory recordingObjectFactory) {
+        this.regressionTestWriter = regressionTestWriter;
+        this.recordingObjectFactory = recordingObjectFactory;
+    }
+
     public void make(Path s, Class<?>... viceMakerClasses) {
         ByteBuddyAgent.install();
         for (Class<?> viceMakerClass : viceMakerClasses) {
@@ -35,40 +40,22 @@ public class Vice {
                     .collect(Collectors.toList());
             try {
                 final Object viceMaker = viceMakerClass.newInstance();
-                final RecordingObject recordingObject = RecordingObject.make(classToClamp);
+                final RecordingObject recordingObject = recordingObjectFactory.make(classToClamp);
                 for (Method method : methodsToExecute) {
                     method.invoke(viceMaker, recordingObject.getRawObject());
                     final String objectVariableName = classToClamp.getSimpleName().toLowerCase();
                     final String format = String.format("$T %s = new $T()", objectVariableName);
                     //noinspection SuspiciousMethodCalls
                     final Triple<Method, List<Object>, Object> firstMethodInvocation = recordingObject.getArgs().get(0);
-                    MethodSpec characterizeReverse = MethodSpec.methodBuilder("characterizeReverse")
-                            .addModifiers(Modifier.PUBLIC)
-                            .returns(void.class)
-                            .addAnnotation(Test.class)
-                            .addStatement(format, classToClamp, classToClamp)
-                            .addStatement("final $T result = $L.$L($S)", firstMethodInvocation.getV().getClass(),
-                                          objectVariableName,
-                                          firstMethodInvocation.getT().getName(),
-                                          firstMethodInvocation.getU().get(0))
-                            .addStatement("assertEquals($S, result)", firstMethodInvocation.getV())
-                            .build();
-                    final String className = classToClamp.getSimpleName() + "Characterization";
-                    TypeSpec characterizationClass = TypeSpec.classBuilder(className)
-                            .addModifiers(Modifier.PUBLIC)
-                            .addMethod(characterizeReverse)
-                            .build();
 
-                    JavaFile javaFile = JavaFile.builder(classToClamp.getPackage().getName(), characterizationClass)
-                            .addStaticImport(TestCase.class, "assertEquals")
-                            .build();
-                    javaFile.writeTo(s);
+                    MethodSpec characterizeReverse = regressionTestWriter.getMethodSpec(classToClamp, objectVariableName, format, firstMethodInvocation);
+                    TypeSpec characterizationClass = regressionTestWriter.getTypeSpec(classToClamp, characterizeReverse);
+                    regressionTestWriter.write(s, classToClamp, characterizationClass);
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
 
 }

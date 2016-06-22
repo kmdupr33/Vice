@@ -13,12 +13,12 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by mattdupree on 6/21/16.
  */
-public class ViceTests {
+public class ViceIntegrationTests {
 
     @Test
     public void simpleTest() throws URISyntaxException, IOException {
 
-        final Vice vice = new Vice();
+        final Vice vice = new Vice(new JavaPoetRegressionTestWriter(), new ByteBuddyRecordingObjectFactory());
         final String pathToGeneratedCharacterizationTest
                 = "/Users/mattdupree/Developer/Vice/src/test/java/";
         final Path testFilesPath = Paths.get(pathToGeneratedCharacterizationTest);
