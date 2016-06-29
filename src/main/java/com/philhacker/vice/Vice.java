@@ -4,6 +4,7 @@ import com.philhacker.vice.annotations.Clamp;
 import com.philhacker.vice.annotations.ViceFor;
 import com.philhacker.vice.recordingobjects.RecordingObject;
 import com.philhacker.vice.recordingobjects.RecordingObjectFactory;
+import com.philhacker.vice.regressiontestwriter.RegressionTestWriter;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import net.bytebuddy.agent.ByteBuddyAgent;

@@ -16,15 +16,15 @@ public class Triple<T, U, V> {
         this.v = v;
     }
 
-    V getV() {
+    public V getV() {
         return v;
     }
 
-    U getU() {
+    public U getU() {
         return u;
     }
 
-    T getT() {
+    public T getT() {
         return t;
     }
 }

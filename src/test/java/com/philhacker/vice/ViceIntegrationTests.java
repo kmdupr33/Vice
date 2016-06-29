@@ -1,6 +1,7 @@
 package com.philhacker.vice;
 
 import com.philhacker.vice.recordingobjects.ByteBuddyRecordingObjectFactory;
+import com.philhacker.vice.regressiontestwriter.JavaPoetRegressionTestWriter;
 import org.junit.Test;
 
 import java.io.IOException;

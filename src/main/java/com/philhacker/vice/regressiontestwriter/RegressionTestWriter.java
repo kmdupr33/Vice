@@ -1,5 +1,6 @@
-package com.philhacker.vice;
+package com.philhacker.vice.regressiontestwriter;
 
+import com.philhacker.vice.Triple;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by mattdupree on 6/22/16.
  */
-interface RegressionTestWriter {
+public interface RegressionTestWriter {
     MethodSpec getMethodSpec(Class classToClamp, String objectVariableName, String format, Triple<Method, List<Object>, Object> firstMethodInvocation);
 
     TypeSpec getTypeSpec(Class classToClamp, MethodSpec characterizeReverse);
