@@ -20,11 +20,11 @@ public class ViceIntegrationTests {
     @Test
     public void simpleTest() throws URISyntaxException, IOException {
 
-        final Vice vice = new Vice(new JavaPoetRegressionTestWriter(), new ByteBuddyRecordingObjectFactory());
         final String pathToGeneratedCharacterizationTest
                 = "/Users/mattdupree/Developer/Vice/src/test/java/";
         final Path testFilesPath = Paths.get(pathToGeneratedCharacterizationTest);
-        vice.make(testFilesPath, ViceMaker.class);
+        final Vice vice = new Vice(new JavaPoetRegressionTestWriter(testFilesPath), new ByteBuddyRecordingObjectFactory());
+        vice.make(ViceMaker.class);
         final Path generatedFilePath = Paths.get(testFilesPath.toFile().getPath() + "/com/philhacker/vice/ReverserCharacterization.java");
         final String generatedFile = new String(Files.readAllBytes(generatedFilePath));
         //noinspection ConstantConditions

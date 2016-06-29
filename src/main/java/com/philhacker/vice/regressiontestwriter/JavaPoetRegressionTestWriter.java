@@ -21,6 +21,13 @@ import java.util.List;
  * Created by mattdupree on 6/22/16.
  */
 public class JavaPoetRegressionTestWriter implements RegressionTestWriter {
+
+    private final Path path;
+
+    public JavaPoetRegressionTestWriter(Path path) {
+        this.path = path;
+    }
+
     public MethodSpec getMethodSpec(Class classToClamp, String objectVariableName, String format, Triple<Method, List<Object>, Object> firstMethodInvocation) {
         return MethodSpec.methodBuilder("characterizeReverse")
                                 .addModifiers(Modifier.PUBLIC)
@@ -43,10 +50,10 @@ public class JavaPoetRegressionTestWriter implements RegressionTestWriter {
                 .build();
     }
 
-    public void write(Path s, Class classToClamp, TypeSpec characterizationClass) throws IOException {
+    public void write(Class classToClamp, TypeSpec characterizationClass) throws IOException {
         JavaFile javaFile = JavaFile.builder(classToClamp.getPackage().getName(), characterizationClass)
                 .addStaticImport(TestCase.class, "assertEquals")
                 .build();
-        javaFile.writeTo(s);
+        javaFile.writeTo(path);
     }
 }

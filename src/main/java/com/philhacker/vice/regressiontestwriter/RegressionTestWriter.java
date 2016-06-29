@@ -6,7 +6,6 @@ import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -17,5 +16,5 @@ public interface RegressionTestWriter {
 
     TypeSpec getTypeSpec(Class classToClamp, MethodSpec characterizeReverse);
 
-    void write(Path s, Class classToClamp, TypeSpec characterizationClass) throws IOException;
+    void write(Class classToClamp, TypeSpec characterizationClass) throws IOException;
 }

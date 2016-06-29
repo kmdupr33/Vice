@@ -12,7 +12,6 @@ import net.bytebuddy.agent.ByteBuddyAgent;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,7 +32,7 @@ public class Vice {
         this.recordingObjectFactory = recordingObjectFactory;
     }
 
-    public void make(Path s, Class<?>... viceMakerClasses) {
+    public void make(Class<?>... viceMakerClasses) {
         ByteBuddyAgent.install();
         for (Class<?> viceMakerClass : viceMakerClasses) {
             final ViceFor annotation = viceMakerClass.getAnnotation(ViceFor.class);
@@ -53,7 +52,7 @@ public class Vice {
 
                     MethodSpec characterizeReverse = regressionTestWriter.getMethodSpec(classToClamp, objectVariableName, format, firstMethodInvocation);
                     TypeSpec characterizationClass = regressionTestWriter.getTypeSpec(classToClamp, characterizeReverse);
-                    regressionTestWriter.write(s, classToClamp, characterizationClass);
+                    regressionTestWriter.write(classToClamp, characterizationClass);
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IOException e) {
                 e.printStackTrace();
