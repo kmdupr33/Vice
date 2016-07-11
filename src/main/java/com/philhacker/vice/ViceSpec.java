@@ -12,8 +12,8 @@ public class ViceSpec {
 
     private final List<Invocation> invocations = new ArrayList<>();
 
-    public void clampMethod(Object target, Object returnValue, Object... params) {
-        invocations.add(new Invocation(target, returnValue, params));
+    public void clampMethod(Object target, String methodName, Object returnValue, Object... params) {
+        invocations.add(new Invocation(target, methodName, returnValue, params));
     }
 
     List<Invocation> getInvocations() {

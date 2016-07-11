@@ -24,7 +24,7 @@ public class ViceSpecTests {
 
         String reverse(String toReverse) {
             final String result = new StringBuilder(toReverse).reverse().toString();
-            viceSpec.clampMethod(this, result, toReverse);
+            viceSpec.clampMethod(this, "reverse", result, toReverse);
             return result;
         }
     }
@@ -32,7 +32,7 @@ public class ViceSpecTests {
     private class Greeter {
         String greet(String name) {
             final String result = "Hello, " + name;
-            viceSpec.clampMethod(this, result, name);
+            viceSpec.clampMethod(this, "greet", result, name);
             return result;
         }
     }
@@ -43,7 +43,7 @@ public class ViceSpecTests {
         final Reverser reverser = new Reverser();
         reverser.reverse("hello");
 
-        assertEquals(Collections.singletonList(new Invocation(reverser, "olleh", "hello")), viceSpec.getInvocations());
+        assertEquals(Collections.singletonList(new Invocation(reverser, "olleh", "reverse", "hello")), viceSpec.getInvocations());
     }
 
     @Test
@@ -53,8 +53,8 @@ public class ViceSpecTests {
         reverser.reverse("hello");
         reverser.reverse("goodbye");
 
-        assertEquals(Arrays.asList(new Invocation(reverser, "olleh", "hello"),
-                                   new Invocation(reverser, "eybdoog", "goodbye")), viceSpec.getInvocations());
+        assertEquals(Arrays.asList(new Invocation(reverser, "olleh", "reverse", "hello"),
+                                   new Invocation(reverser, "eybdoog", "reverse", "goodbye")), viceSpec.getInvocations());
     }
 
 
@@ -66,7 +66,7 @@ public class ViceSpecTests {
         final Greeter greeter = new Greeter();
         greeter.greet("Billy");
 
-        assertEquals(Arrays.asList(new Invocation(reverser, "olleh", "hello"),
-                                   new Invocation(greeter, "Hello, Billy", "Billy")), viceSpec.getInvocations());
+        assertEquals(Arrays.asList(new Invocation(reverser, "olleh", "reverse", "hello"),
+                                   new Invocation(greeter, "Hello, Billy", "greet", "Billy")), viceSpec.getInvocations());
     }
 }

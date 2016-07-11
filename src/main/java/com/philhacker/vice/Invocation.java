@@ -1,5 +1,6 @@
 package com.philhacker.vice;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
@@ -8,12 +9,33 @@ import java.util.Arrays;
 public class Invocation {
     private final Object target;
     private final Object returnValue;
+    private final String methodName;
     private final Object[] parameters;
 
-    public Invocation(Object target, Object returnValue, Object... parameters) {
+    public Invocation(Object target, String methodName, Object returnValue, Object... parameters) {
         this.target = target;
         this.returnValue = returnValue;
+        this.methodName = methodName;
         this.parameters = parameters;
+    }
+
+    private Method findMethod(Object target, Object returnValue, Object[] parameters) {
+        for (Method method : target.getClass().getMethods()) {
+            final boolean returnTypesMatch = method.getReturnType() == returnValue.getClass();
+            if (returnTypesMatch && parameterTypesMatch(method.getParameterTypes(), parameters)) {
+                return method;
+            }
+        }
+        throw new IllegalArgumentException("cannot find method on " + target + " with return value " + returnValue + " and params: " + parameters);
+    }
+
+    private boolean parameterTypesMatch(Class<?>[] parameterTypes, Object[] parameters) {
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (!parameterTypes[i].equals(parameters[i].getClass())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -39,10 +61,14 @@ public class Invocation {
     }
 
     public String getMethodName() {
-        return "reverse";
+        return methodName;
     }
 
     public Object[] getParameters() {
         return parameters;
+    }
+
+    public Class<?> getMethodReturnValueType() {
+        return returnValue.getClass();
     }
 }

@@ -26,7 +26,7 @@ public class ViceFactory {
         final MethodSpec testMethod = MethodSpec.methodBuilder("clampReverse")
                 .addAnnotation(Test.class)
                 .addStatement("$T $L = new $T()", aClass, targetVariableName, aClass)
-                .addStatement("$T result = $L.$L($S)", String.class, targetVariableName, invocation.getMethodName(), invocation.getParameters()[0])
+                .addStatement("$T result = $L.$L($S)", invocation.getMethodReturnValueType(), targetVariableName, invocation.getMethodName(), invocation.getParameters()[0])
                 .addStatement("assertEquals($S, result)", "olleh")
                 .build();
 

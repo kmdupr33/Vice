@@ -24,7 +24,7 @@ public class ViceFactoryTests {
         class Reverser {
             String reverse(String toReverse) {
                 final String result = new StringBuilder(toReverse).reverse().toString();
-                viceSpec.clampMethod(this, result, toReverse);
+                viceSpec.clampMethod(this, "reverse", result, toReverse);
                 return result;
             }
         }
