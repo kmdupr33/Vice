@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Collects info for the tests that will be generated.
+ *
  * Created by mattdupree on 7/11/16.
  */
 public class ViceSpec {
