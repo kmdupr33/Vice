@@ -6,10 +6,12 @@ import java.util.Arrays;
  * Created by mattdupree on 7/11/16.
  */
 public class Invocation {
+    private final Object target;
     private final Object returnValue;
     private final Object[] parameters;
 
-    public Invocation(Object returnValue, Object... parameters) {
+    public Invocation(Object target, Object returnValue, Object... parameters) {
+        this.target = target;
         this.returnValue = returnValue;
         this.parameters = parameters;
     }
@@ -20,7 +22,7 @@ public class Invocation {
         if (o == null || getClass() != o.getClass()) return false;
 
         Invocation that = (Invocation) o;
-
+        if (target != null ? !target.equals(that.target) : that.target != null) return false;
         if (returnValue != null ? !returnValue.equals(that.returnValue) : that.returnValue != null) return false;
         return Arrays.equals(parameters, that.parameters);
     }
