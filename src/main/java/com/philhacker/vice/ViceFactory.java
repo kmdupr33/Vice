@@ -29,7 +29,8 @@ public class ViceFactory {
         final String methodNameSuffix = getMethodNameSuffix(invocation);
 
         StringBuilder actMethodInvocationStringBuilder = new StringBuilder("$T result = $L.$L(");
-        for (Object param : invocation.getParameters()) {
+        // TODO find cleaner way
+        for (Object ignored : invocation.getParameters()) {
             actMethodInvocationStringBuilder.append("$S, ");
         }
         actMethodInvocationStringBuilder.delete(actMethodInvocationStringBuilder.length() - 2, actMethodInvocationStringBuilder.length());
