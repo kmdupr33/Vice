@@ -9,7 +9,7 @@ public class AppenderVice {
     @Test
     void clampAppend() {
         ViceFactoryTests.Appender appender = new ViceFactoryTests.Appender();
-        String result = appender.append("hello", "bob");
-        assertEquals("hello bob", result);
+        String result = appender.append("oll", "eh");
+        assertEquals("olleh", result);
     }
 }

@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by mattdupree on 7/11/16.
@@ -25,15 +28,23 @@ public class ViceFactory {
         final String targetVariableName = targetClassName.getSimpleName().toLowerCase();
         final String methodNameSuffix = getMethodNameSuffix(invocation);
 
-        StringBuilder actMethodInvocationStringBuilder = new StringBuilder("$T result = $L.$L($S)");
+        StringBuilder actMethodInvocationStringBuilder = new StringBuilder("$T result = $L.$L(");
+        for (Object param : invocation.getParameters()) {
+            actMethodInvocationStringBuilder.append("$S, ");
+        }
+        actMethodInvocationStringBuilder.delete(actMethodInvocationStringBuilder.length() - 2, actMethodInvocationStringBuilder.length());
+        actMethodInvocationStringBuilder.append(")");
+
+        List<Object> statementFormatStringArgs = new ArrayList<>();
+        statementFormatStringArgs.add(invocation.getMethodReturnValueType());
+        statementFormatStringArgs.add(targetVariableName);
+        statementFormatStringArgs.add(invocation.getMethodName());
+        statementFormatStringArgs.addAll(Arrays.asList(invocation.getParameters()));
 
         final MethodSpec testMethod = MethodSpec.methodBuilder("clamp" + methodNameSuffix)
                 .addAnnotation(Test.class)
                 .addStatement("$T $L = new $T()", targetClassName, targetVariableName, targetClassName)
-                .addStatement(actMethodInvocationStringBuilder.toString(), invocation.getMethodReturnValueType(),
-                              targetVariableName,
-                              invocation.getMethodName(),
-                              invocation.getParameters()[0])
+                .addStatement(actMethodInvocationStringBuilder.toString(), statementFormatStringArgs.toArray())
                 .addStatement("assertEquals($S, result)", "olleh")
                 .build();
 

@@ -67,7 +67,7 @@ public class ViceFactoryTests {
             }
         }
 
-        new Appender().append("hello", "bob");
+        new Appender().append("oll", "eh");
 
         final String vice = viceFactory.make(viceSpec);
         assertEquals(getExpectedVice("AppenderVice.java"), vice);
