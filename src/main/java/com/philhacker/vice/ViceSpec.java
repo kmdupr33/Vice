@@ -16,11 +16,7 @@ public class ViceSpec {
         invocations.add(new Invocation(target, returnValue, params));
     }
 
-    public void onObject(Object object) {
-
-    }
-
     List<Invocation> getInvocations() {
-        return invocations;
+        return new ArrayList<>(invocations);
     }
 }

@@ -33,4 +33,16 @@ public class Invocation {
         result = 31 * result + Arrays.hashCode(parameters);
         return result;
     }
+
+    public Object getTarget() {
+        return target;
+    }
+
+    public String getMethodName() {
+        return "reverse";
+    }
+
+    public Object[] getParameters() {
+        return parameters;
+    }
 }
