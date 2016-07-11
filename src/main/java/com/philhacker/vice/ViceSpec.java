@@ -6,11 +6,11 @@ import java.util.List;
 /**
  * Created by mattdupree on 7/11/16.
  */
-public class Installer {
+public class ViceSpec {
 
     private final List<Invocation> invocations = new ArrayList<>();
 
-    public void onMethod(Object target, Object returnValue, Object... params) {
+    public void clampMethod(Object target, Object returnValue, Object... params) {
         invocations.add(new Invocation(target, returnValue, params));
     }
 
@@ -18,7 +18,7 @@ public class Installer {
 
     }
 
-    public List<Invocation> getInvocations() {
+    List<Invocation> getInvocations() {
         return invocations;
     }
 }

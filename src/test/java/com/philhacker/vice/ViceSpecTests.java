@@ -11,20 +11,20 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by mattdupree on 7/11/16.
  */
-public class InstallerTests {
+public class ViceSpecTests {
 
-    private Installer installer;
+    private ViceSpec viceSpec;
 
     @Before
     public void makeInstaller() {
-        installer = new Installer();
+        viceSpec = new ViceSpec();
     }
 
     private class Reverser {
 
         String reverse(String toReverse) {
             final String result = new StringBuilder(toReverse).reverse().toString();
-            installer.onMethod(this, result, toReverse);
+            viceSpec.clampMethod(this, result, toReverse);
             return result;
         }
     }
@@ -32,7 +32,7 @@ public class InstallerTests {
     private class Greeter {
         String greet(String name) {
             final String result = "Hello, " + name;
-            installer.onMethod(this, result, name);
+            viceSpec.clampMethod(this, result, name);
             return result;
         }
     }
@@ -43,7 +43,7 @@ public class InstallerTests {
         final Reverser reverser = new Reverser();
         reverser.reverse("hello");
 
-        assertEquals(Collections.singletonList(new Invocation(reverser, "olleh", "hello")), installer.getInvocations());
+        assertEquals(Collections.singletonList(new Invocation(reverser, "olleh", "hello")), viceSpec.getInvocations());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class InstallerTests {
         reverser.reverse("goodbye");
 
         assertEquals(Arrays.asList(new Invocation(reverser, "olleh", "hello"),
-                                   new Invocation(reverser, "eybdoog", "goodbye")), installer.getInvocations());
+                                   new Invocation(reverser, "eybdoog", "goodbye")), viceSpec.getInvocations());
     }
 
 
@@ -67,6 +67,6 @@ public class InstallerTests {
         greeter.greet("Billy");
 
         assertEquals(Arrays.asList(new Invocation(reverser, "olleh", "hello"),
-                                   new Invocation(greeter, "Hello, Billy", "Billy")), installer.getInvocations());
+                                   new Invocation(greeter, "Hello, Billy", "Billy")), viceSpec.getInvocations());
     }
 }
