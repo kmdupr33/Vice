@@ -14,8 +14,8 @@ public class Invocation {
 
     public Invocation(Object target, String methodName, Object returnValue, Object... parameters) {
         this.target = target;
-        this.returnValue = returnValue;
         this.methodName = methodName;
+        this.returnValue = returnValue;
         this.parameters = parameters;
     }
 
@@ -70,5 +70,9 @@ public class Invocation {
 
     public Class<?> getMethodReturnValueType() {
         return returnValue.getClass();
+    }
+
+    public Object getReturnValue() {
+        return returnValue;
     }
 }

@@ -21,21 +21,28 @@ public class ViceFactory {
     public String make(ViceSpec viceSpec) throws IOException {
 
         final Invocation invocation = viceSpec.getInvocations().get(0);
-        final Class<?> aClass = invocation.getTarget().getClass();
-        final String targetVariableName = aClass.getSimpleName().toLowerCase();
-        final MethodSpec testMethod = MethodSpec.methodBuilder("clampReverse")
+        final Class<?> targetClassName = invocation.getTarget().getClass();
+        final String targetVariableName = targetClassName.getSimpleName().toLowerCase();
+        final String methodNameSuffix = getMethodNameSuffix(invocation);
+
+        StringBuilder actMethodInvocationStringBuilder = new StringBuilder("$T result = $L.$L($S)");
+
+        final MethodSpec testMethod = MethodSpec.methodBuilder("clamp" + methodNameSuffix)
                 .addAnnotation(Test.class)
-                .addStatement("$T $L = new $T()", aClass, targetVariableName, aClass)
-                .addStatement("$T result = $L.$L($S)", invocation.getMethodReturnValueType(), targetVariableName, invocation.getMethodName(), invocation.getParameters()[0])
+                .addStatement("$T $L = new $T()", targetClassName, targetVariableName, targetClassName)
+                .addStatement(actMethodInvocationStringBuilder.toString(), invocation.getMethodReturnValueType(),
+                              targetVariableName,
+                              invocation.getMethodName(),
+                              invocation.getParameters()[0])
                 .addStatement("assertEquals($S, result)", "olleh")
                 .build();
 
-        final TypeSpec testClass = TypeSpec.classBuilder("ReverserVice")
+        final TypeSpec testClass = TypeSpec.classBuilder(targetClassName.getSimpleName() + "Vice")
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(testMethod)
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(aClass.getPackage().getName(), testClass)
+        JavaFile javaFile = JavaFile.builder(targetClassName.getPackage().getName(), testClass)
                 .indent("    ")
                 .addStaticImport(org.junit.Assert.class, "assertEquals")
                 .build();
@@ -43,5 +50,9 @@ public class ViceFactory {
         final StringBuilder out = new StringBuilder();
         javaFile.writeTo(out);
         return out.toString();
+    }
+
+    private String getMethodNameSuffix(Invocation invocation) {
+        return invocation.getMethodName().substring(0, 1).toUpperCase() + invocation.getMethodName().substring(1);
     }
 }
