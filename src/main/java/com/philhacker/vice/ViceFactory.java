@@ -35,7 +35,7 @@ public class ViceFactory {
                 .addMethod(testMethod)
                 .build();
 
-        JavaFile javaFile = JavaFile.builder("com.philhacker.vice", testClass)
+        JavaFile javaFile = JavaFile.builder(aClass.getPackage().getName(), testClass)
                 .indent("    ")
                 .addStaticImport(org.junit.Assert.class, "assertEquals")
                 .build();
