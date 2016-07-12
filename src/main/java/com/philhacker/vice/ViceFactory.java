@@ -1,5 +1,6 @@
 package com.philhacker.vice;
 
+import com.google.gson.Gson;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -24,6 +25,7 @@ public class ViceFactory {
     public String make(ViceSpec viceSpec) throws IOException {
 
         final Invocation invocation = viceSpec.getInvocations().get(0);
+        System.out.println(new Gson().toJson(viceSpec.getInvocations()));
         final Class<?> targetClassName = invocation.getTarget().getClass();
         final String targetVariableName = targetClassName.getSimpleName().toLowerCase();
         final String methodNameSuffix = getMethodNameSuffix(invocation);
