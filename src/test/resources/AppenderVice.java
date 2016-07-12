@@ -1,8 +1,9 @@
 package com.philhacker.vice;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import java.lang.String;
+import org.junit.Test;
 
 public class AppenderVice {
     @Test

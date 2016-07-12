@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,37 +29,54 @@ public class ViceFactory {
 
         final Invocation invocation = viceSpec.getInvocations().get(0);
         System.out.println(new Gson().toJson(viceSpec.getInvocations()));
-        final Class<?> targetClassName = invocation.getTarget().getClass();
-        final String targetVariableName = targetClassName.getSimpleName().toLowerCase();
+        final Class<?> targetClass = invocation.getTarget().getClass();
+        final String targetVariableName = targetClass.getSimpleName().toLowerCase();
         final String methodNameSuffix = getMethodNameSuffix(invocation);
 
         StringBuilder actMethodInvocationStringBuilder = new StringBuilder("$T result = $L.$L(");
         // TODO find cleaner way
-        for (Object ignored : invocation.getParameters()) {
-            actMethodInvocationStringBuilder.append("$S, ");
-        }
-        actMethodInvocationStringBuilder.delete(actMethodInvocationStringBuilder.length() - 2, actMethodInvocationStringBuilder.length());
-        actMethodInvocationStringBuilder.append(")");
+        final Object[] parameters = invocation.getParameters();
+
 
         List<Object> statementFormatStringArgs = new ArrayList<>();
         statementFormatStringArgs.add(invocation.getMethodReturnValueType());
         statementFormatStringArgs.add(targetVariableName);
         statementFormatStringArgs.add(invocation.getMethodName());
-        statementFormatStringArgs.addAll(Arrays.asList(invocation.getParameters()));
 
-        final MethodSpec testMethod = MethodSpec.methodBuilder("clamp" + methodNameSuffix)
+        for (int i = 0; i < parameters.length; i ++) {
+            actMethodInvocationStringBuilder.append("$L, ");
+            statementFormatStringArgs.add("invocation.getParams().get("+i+")");
+        }
+
+        if (parameters.length > 0) {
+            actMethodInvocationStringBuilder.delete(actMethodInvocationStringBuilder.length() - 2, actMethodInvocationStringBuilder.length());
+        }
+        actMethodInvocationStringBuilder.append(")");
+
+        final MethodSpec.Builder testMethodBuilder = MethodSpec.methodBuilder("clamp" + methodNameSuffix)
                 .addAnnotation(Test.class)
-                .addStatement("$T $L = new $T()", targetClassName, targetVariableName, targetClassName)
+                .addException(URISyntaxException.class)
+                .addException(IOException.class)
+                //final InputStream resource = this.getClass().getClassLoader()
+                // .getResource("PersonViceMaker.json").openStream();
+                .addStatement("$T resource = this.getClass().getClassLoader().getResource($S).openStream()", InputStream.class, targetClass.getSimpleName() + ".json");
+
+        // ViceFactoryTests.PersonMaker.Person personMakerMakeResult = new Gson().fromJson(new InputStreamReader(resource),
+        //        ViceFactoryTests.PersonMaker.Person.class);
+        if (!invocation.getMethodReturnValueType().equals(Void.class)) {
+            testMethodBuilder.addStatement("$T invocation = new $T().fromJson(new $T(resource), $T.class)",
+                                           Invocation.class, Invocation.class, InputStreamReader.class, Invocation.class);
+        }
+        final MethodSpec methodSpec = testMethodBuilder.addStatement("$T $L = new $T()", targetClass, targetVariableName, targetClass)
                 .addStatement(actMethodInvocationStringBuilder.toString(), statementFormatStringArgs.toArray())
-                .addStatement("assertEquals($S, result)", "olleh")
-                .build();
+                .addStatement("assertEquals(invocation.getReturnValue(), result)").build();
 
-        final TypeSpec testClass = TypeSpec.classBuilder(targetClassName.getSimpleName() + "Vice")
+        final TypeSpec testClass = TypeSpec.classBuilder(targetClass.getSimpleName() + "Vice")
                 .addModifiers(Modifier.PUBLIC)
-                .addMethod(testMethod)
+                .addMethod(methodSpec)
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(targetClassName.getPackage().getName(), testClass)
+        JavaFile javaFile = JavaFile.builder(targetClass.getPackage().getName(), testClass)
                 .indent("    ")
                 .addStaticImport(org.junit.Assert.class, "assertEquals")
                 .build();

@@ -72,4 +72,7 @@ public class Invocation {
         return returnValue.getClass();
     }
 
+    public Object getReturnValue() {
+        return returnValue;
+    }
 }
